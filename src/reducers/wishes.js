@@ -1,7 +1,10 @@
 import {
   WISH_LOAD,
   WISH_LOAD_SUCCESS,
-  WISH_LOAD_FAIL
+  WISH_LOAD_FAIL,
+  WISH_CREATE,
+  WISH_CREATE_SUCCESS,
+  WISH_CREATE_FAIL
 } from '../actions/actionTypes';
 
 const initialState = {
@@ -31,6 +34,27 @@ export default function wishes(state = initialState, action = {}) {
         data: null,
         error: action.error
       };
+
+    case WISH_CREATE:
+      return {
+        ...state,
+        creating: true
+      };
+    case WISH_CREATE_SUCCESS:
+      let newData = [action.result].concat(state.data);
+      return {
+        ...state,
+        creating: false,
+        data: newData,
+        error: null
+      };
+    case WISH_CREATE_FAIL:
+      return {
+        ...state,
+        creating: false,
+        error: action.error
+      };
+    
     default:
       return state;
   }

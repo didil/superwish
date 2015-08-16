@@ -1,14 +1,16 @@
 import Wish from '../models/wish.model'
 
-export default function() {
+export default function () {
   return new Promise((resolve, reject) => {
-    Wish.find({},(err,wishes) => {
-      if(err){
-        reject(err)
-      }
-      else{
-        resolve(wishes)
-      }
-    });
+    Wish.find({})
+      .sort({createdAt: -1})
+      .exec((err, wishes) => {
+        if (err) {
+          reject(err)
+        }
+        else {
+          resolve(wishes)
+        }
+      });
   });
 }

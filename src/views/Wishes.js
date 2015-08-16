@@ -3,27 +3,20 @@ import {bindActionCreators} from 'redux';
 import {isLoaded} from '../reducers/wishes';
 import {connect} from 'react-redux';
 import * as wishActions from '../actions/wishActions';
-import {load as loadWishes} from '../actions/wishActions';
+import {load as loadWishes } from '../actions/wishActions';
 import {requireServerCss} from '../util';
 import moment from 'moment';
 
 const styles = __CLIENT__ ? require('./Wishes.scss') : requireServerCss(require.resolve('./Wishes.scss'));
-
-@connect(
-    state => ({
-    wishes: state.wishes.data,
-    error: state.wishes.error,
-    loading: state.wishes.loading
-  }),
-    dispatch => bindActionCreators(wishActions, dispatch)
-)
 
 class Wishes extends Component {
   static propTypes = {
     wishes: PropTypes.array,
     error: PropTypes.string,
     loading: PropTypes.bool,
-    load: PropTypes.func.isRequired
+    creating: PropTypes.bool,
+    load: PropTypes.func.isRequired,
+    create: PropTypes.func.isRequired,
   }
 
   static fetchData(store) {
@@ -32,8 +25,17 @@ class Wishes extends Component {
     }
   }
 
+  handleSubmit(event) {
+    event.preventDefault();
+    const input = this.refs.newWish.getDOMNode();  // need for getDOMNode() call going away in React 0.14
+    if (input.value) {
+      this.props.create(input.value);
+      input.value = '';
+    }
+  }
+
   render() {
-    const {wishes, error, loading, load} = this.props;
+    const {wishes, error, loading, load, user} = this.props;
     let refreshClassName = 'fa fa-refresh';
     if (loading) {
       refreshClassName += ' fa-spin';
@@ -53,11 +55,34 @@ class Wishes extends Component {
           {' '}
           {error}
         </div>}
-        {wishes && wishes.length &&
+
+        {user &&
+        <div className="panel panel-default">
+          <div className="panel-heading">
+            <h3 className="panel-title">New Wish</h3>
+          </div>
+          <div className="panel-body">
+            <form className="form-inline" onSubmit={this.handleSubmit.bind(this)}>
+              <div className="form-group">
+                <input type="text" className="form-control new-wish" ref="newWish" placeholder="A Surfboard"/>
+              </div>
+              <button type="submit" className="btn btn-primary">Save</button>
+            </form>
+          </div>
+        </div>
+        }
+        {!user &&
+        <div className="alert alert-danger" role="alert">
+          <span className="sr-only">Error:</span>
+          Please login to be able to create wishes
+        </div>
+        }
+
+        {wishes && wishes.length > 0 &&
         <table className="table table-striped">
           <thead>
           <tr>
-            <th>Name</th>
+            <th>Wish</th>
             <th>User</th>
             <th>Created</th>
           </tr>
@@ -72,6 +97,9 @@ class Wishes extends Component {
           }
           </tbody>
         </table>}
+        {wishes && wishes.length == 0 &&
+        <em>No Wishes available</em>
+        }
       </div>
     );
   }
@@ -79,9 +107,11 @@ class Wishes extends Component {
 
 export default connect(
     state => ({
+    user: state.auth.user,
     wishes: state.wishes.data,
     error: state.wishes.error,
-    loading: state.wishes.loading
+    loading: state.wishes.loading,
+    creating: state.wishes.creating
   }),
     dispatch => bindActionCreators(wishActions, dispatch)
 )(Wishes);

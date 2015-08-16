@@ -5,7 +5,8 @@ var mongoose = require('mongoose'),
 var timestamps = require('mongoose-timestamp');
 
 var WishSchema = new Schema({
-  name: String
+  name: String,
+  user: String
 });
 
 WishSchema.plugin(timestamps);

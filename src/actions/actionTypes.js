@@ -1,6 +1,10 @@
 export const WISH_LOAD = 'WISH_LOAD';
 export const WISH_LOAD_SUCCESS = 'WISH_LOAD_SUCCESS';
 export const WISH_LOAD_FAIL = 'WISH_LOAD_FAIL';
+export const WISH_CREATE = 'WISH_CREATE';
+export const WISH_CREATE_SUCCESS = 'WISH_CREATE_SUCCESS';
+export const WISH_CREATE_FAIL = 'WISH_CREATE_FAIL';
+
 export const AUTH_LOAD = 'AUTH_LOAD';
 export const AUTH_LOAD_SUCCESS = 'AUTH_LOAD_SUCCESS';
 export const AUTH_LOAD_FAIL = 'AUTH_LOAD_FAIL';
