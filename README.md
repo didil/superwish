@@ -9,6 +9,8 @@ A Wishlist web app using
 - MongoDB
 - Express.js
 
+App live at http://superwish.herokuapp.com/
+
 boilerplate from https://github.com/erikras/react-redux-universal-hot-example
 
 Copyright 2015 - Adil Haritah
