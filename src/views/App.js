@@ -79,6 +79,13 @@ class App extends Component {
           {this.props.children}
         </div>
 
+        <footer className={styles.footer}>
+          <div className="container">
+            Copyright © 2015 - Developed with  <i className="fa fa-heart"></i> by <a href="http://www.adilh.com">Adil Haritah</a> -
+            Powered by React + Redux + Node.js + Express.js + MongoDB
+          </div>
+        </footer>
+        
       </div>
     );
   }
