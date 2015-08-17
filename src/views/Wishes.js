@@ -6,6 +6,7 @@ import * as wishActions from '../actions/wishActions';
 import {load as loadWishes } from '../actions/wishActions';
 import {requireServerCss} from '../util';
 import moment from 'moment';
+import NewWishForm from '../components/NewWishForm'
 
 const styles = __CLIENT__ ? require('./Wishes.scss') : requireServerCss(require.resolve('./Wishes.scss'));
 
@@ -25,17 +26,12 @@ class Wishes extends Component {
     }
   }
 
-  handleSubmit(event) {
-    event.preventDefault();
-    const input = this.refs.newWish.getDOMNode();  // need for getDOMNode() call going away in React 0.14
-    if (input.value) {
-      this.props.create(input.value);
-      input.value = '';
-    }
+  handleNewWish(wishName) {
+    this.props.create(wishName);
   }
 
   render() {
-    const {wishes, error, loading, load, user} = this.props;
+    const {wishes, error, loading, creating, load, user } = this.props;
     let refreshClassName = 'fa fa-refresh';
     if (loading) {
       refreshClassName += ' fa-spin';
@@ -57,19 +53,7 @@ class Wishes extends Component {
         </div>}
 
         {user &&
-        <div className="panel panel-default">
-          <div className="panel-heading">
-            <h3 className="panel-title">New Wish</h3>
-          </div>
-          <div className="panel-body">
-            <form className="form-inline" onSubmit={this.handleSubmit.bind(this)}>
-              <div className="form-group">
-                <input type="text" className="form-control new-wish" ref="newWish" placeholder="A Surfboard"/>
-              </div>
-              <button type="submit" className="btn btn-primary">Save</button>
-            </form>
-          </div>
-        </div>
+        <NewWishForm onNewWish={this.handleNewWish.bind(this)} creating={this.props.creating} />
         }
         {!user &&
         <div className="alert alert-danger" role="alert">
@@ -97,6 +81,7 @@ class Wishes extends Component {
           }
           </tbody>
         </table>}
+
         {wishes && wishes.length == 0 &&
         <em>No Wishes available</em>
         }
