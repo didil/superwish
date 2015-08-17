@@ -7,6 +7,7 @@ import {load as loadWishes } from '../actions/wishActions';
 import {requireServerCss} from '../util';
 import moment from 'moment';
 import NewWishForm from '../components/NewWishForm'
+import Loader from 'react-loader';
 
 const styles = __CLIENT__ ? require('./Wishes.scss') : requireServerCss(require.resolve('./Wishes.scss'));
 
@@ -16,8 +17,10 @@ class Wishes extends Component {
     error: PropTypes.string,
     loading: PropTypes.bool,
     creating: PropTypes.bool,
+    destroying: PropTypes.bool,
     load: PropTypes.func.isRequired,
     create: PropTypes.func.isRequired,
+    destroy: PropTypes.func.isRequired
   }
 
   static fetchData(store) {
@@ -30,8 +33,13 @@ class Wishes extends Component {
     this.props.create(wishName);
   }
 
+  handleDestroy(e,_id) {
+    e.preventDefault();
+    this.props.destroy(_id);
+  }
+
   render() {
-    const {wishes, error, loading, creating, load, user } = this.props;
+    const {wishes, error, loading,   load, user } = this.props;
     let refreshClassName = 'fa fa-refresh';
     if (loading) {
       refreshClassName += ' fa-spin';
@@ -53,7 +61,7 @@ class Wishes extends Component {
         </div>}
 
         {user &&
-        <NewWishForm onNewWish={this.handleNewWish.bind(this)} creating={this.props.creating} />
+        <NewWishForm onNewWish={this.handleNewWish.bind(this)} creating={this.props.creating}/>
         }
         {!user &&
         <div className="alert alert-danger" role="alert">
@@ -69,18 +77,25 @@ class Wishes extends Component {
             <th>Wish</th>
             <th>User</th>
             <th>Created</th>
+            <th></th>
           </tr>
           </thead>
           <tbody>
           {
-            wishes.map((wish) => <tr key={wish._id}>
-              <td>{wish.name}</td>
-              <td>{wish.user}</td>
-              <td>{moment(wish.createdAt).fromNow()}</td>
-            </tr>)
+            wishes.map((wish) =>
+              <tr key={wish._id}>
+                <td>{wish.name}</td>
+                <td>{wish.user}</td>
+                <td>{moment(wish.createdAt).fromNow()}</td>
+                <td>
+                  {user && wish.user === user.name &&
+                  <a href className="btn btn-danger" onClick={(e) => this.handleDestroy(e,wish._id)}>Destroy</a>}
+                </td>
+              </tr>)
           }
           </tbody>
         </table>}
+        <Loader loaded={!this.props.destroying}/>
 
         {wishes && wishes.length == 0 &&
         <em>No Wishes available</em>
@@ -96,7 +111,8 @@ export default connect(
     wishes: state.wishes.data,
     error: state.wishes.error,
     loading: state.wishes.loading,
-    creating: state.wishes.creating
+    creating: state.wishes.creating,
+    destroying: state.wishes.destroying
   }),
     dispatch => bindActionCreators(wishActions, dispatch)
 )(Wishes);

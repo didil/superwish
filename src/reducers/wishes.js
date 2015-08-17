@@ -1,10 +1,15 @@
+import _ from 'lodash';
+
 import {
   WISH_LOAD,
   WISH_LOAD_SUCCESS,
   WISH_LOAD_FAIL,
   WISH_CREATE,
   WISH_CREATE_SUCCESS,
-  WISH_CREATE_FAIL
+  WISH_CREATE_FAIL,
+  WISH_DESTROY,
+  WISH_DESTROY_SUCCESS,
+  WISH_DESTROY_FAIL
 } from '../actions/actionTypes';
 
 const initialState = {
@@ -54,7 +59,27 @@ export default function wishes(state = initialState, action = {}) {
         creating: false,
         error: action.error
       };
-    
+
+    case WISH_DESTROY:
+      return {
+        ...state,
+        destroying : true
+      };
+    case WISH_DESTROY_SUCCESS:
+      let data =  _.reject(state.data, '_id', action.result._id);
+      return {
+        ...state,
+        destroying: false,
+        data: data,
+        error: null
+      };
+    case WISH_DESTROY_FAIL:
+      return {
+        ...state,
+        destroying: false,
+        error: action.error
+      };
+
     default:
       return state;
   }
