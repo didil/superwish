@@ -20,9 +20,9 @@ export default class Html extends Component {
 
   render() {
     const {webpackStats, component, store} = this.props;
-    const title = 'React Redux Example';
-    const description = 'All the modern best practices in one example.';
-    const image = 'https://react-redux.herokuapp.com/logo.jpg';
+    const title = 'Superwish';
+    const description = 'Next Gen Wishlist.';
+    const image = 'https://superwish.herokuapp.com/logo.jpg';
     return (
       <html lang="en-us">
         <head>
@@ -34,8 +34,8 @@ export default class Html extends Component {
           <meta property="og:title" content={title}/>
           <meta property="og:description" content={description}/>
           <meta name="twitter:card" content="summary"/>
-          <meta property="twitter:site" content="@erikras"/>
-          <meta property="twitter:creator" content="@erikras"/>
+          <meta property="twitter:site" content="@adilh_dev"/>
+          <meta property="twitter:creator" content="@adilh_dev"/>
           <meta property="twitter:image" content={image}/>
           <meta property="twitter:image:width" content="200"/>
           <meta property="twitter:image:height" content="200"/>
